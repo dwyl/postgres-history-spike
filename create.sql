@@ -110,10 +110,10 @@ LOOP
   EXECUTE format('CREATE TABLE IF NOT EXISTS %I (_id serial, like %I)',
     new_table, table_name);
 
-  RAISE NOTICE 'trigger_name: $', trigger_name
-  -- CREATE TRIGGER EXECUTE format('%I', trigger_name)
-  --   AFTER INSERT OR UPDATE ON ps_counters FOR EACH ROW
-  --   EXECUTE PROCEDURE history_trigger(db_name, table_name);
+  EXECUTE format('CREATE TRIGGER %I
+    AFTER INSERT OR UPDATE ON %I FOR EACH ROW
+    EXECUTE PROCEDURE history_trigger(%I, %I)',
+      trigger_name, table_name, db_name, table_name);
 
   END LOOP;
 
