@@ -2,7 +2,7 @@ defmodule PostgresHistory.CreateHistory do
   use GenServer
 
   def start_link(_args) do
-    GenServer.start_link(__MODULE__, "scripts_dev")
+    GenServer.start_link(__MODULE__, "postgres_history_dev")
   end
 
   def init(db_name) do
