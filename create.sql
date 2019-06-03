@@ -127,9 +127,7 @@ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION create_history(db_name TEXT)
-RETURNS boolean
-
-AS $func$
+RETURNS boolean AS $func$
 
 DECLARE
   tables RECORD;
@@ -156,8 +154,9 @@ LOOP
       (_id serial PRIMARY KEY, like %I)', new_table, table_name);
 
   --  execute the mirror tables function here:
-  PERFORM apply_alterations(app_dev);
+  PERFORM apply_alterations(db_name);
 
+  EXECUTE format ('DROP TRIGGER IF EXISTS %I on %I', trigger_name, table_name);
   EXECUTE format('CREATE TRIGGER %I
     AFTER INSERT OR UPDATE ON %I FOR EACH ROW
     EXECUTE PROCEDURE history_trigger(%I, %I)',
@@ -170,4 +169,4 @@ LOOP
 END; $func$
 LANGUAGE plpgsql;
 
-SELECT create_history('hits_dev')
+SELECT create_history(insert db name here)
