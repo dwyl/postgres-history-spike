@@ -3,6 +3,7 @@ defmodule PostgresHistory.Application do
 
   def start(_type, _args) do
     children = [
+      PostgresHistory.Repo,
       PostgresHistory.CreateHistory
     ]
 

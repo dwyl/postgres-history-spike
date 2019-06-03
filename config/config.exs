@@ -28,3 +28,13 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env()}.exs"
+
+config :postgres_history,
+  ecto_repos: [PostgresHistory.Repo]
+
+config :postgres_history, PostgresHistory.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "postgres_history_dev",
+  hostname: "localhost",
+  pool_size: 10
