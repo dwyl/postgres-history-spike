@@ -2,20 +2,35 @@ defmodule PostgresHistory.CreateHistory do
   use GenServer
 
   def start_link(_args) do
-    GenServer.start_link(__MODULE__, "postgres_history_dev")
+    GenServer.start_link(__MODULE__, [])
   end
 
-  def init(db_name) do
-    create_history(db_name)
-    {:ok, db_name}
+  def init(args) do
+    create_history()
+    {:ok, args}
   end
 
-  defp create_history(db_name) do
-    "sql"
+  def create_history do
+    repo = repo()
+    db_name = database()
+
+    "/Users/robertfrancis/Code/work/postgres-history-spike/sql"
     |> File.ls!()
-    |> Enum.map(&File.read!("sql/#{&1}"))
-    |> Enum.each(&Ecto.Adapters.SQL.query!(PostgresHistory.Repo, &1))
+    |> Enum.map(&File.read!("/Users/robertfrancis/Code/work/postgres-history-spike/sql/#{&1}"))
+    |> Enum.each(&Ecto.Adapters.SQL.query!(repo, &1))
 
-    Ecto.Adapters.SQL.query!(PostgresHistory.Repo, "SELECT create_history('#{db_name}')")
+    Ecto.Adapters.SQL.query!(repo, "SELECT create_history('#{db_name}')")
+  end
+
+  defp repo do
+    :postgres_history
+    |> Application.fetch_env!(PostgresHistory.CreateHistory)
+    |> Keyword.fetch!(:repo)
+  end
+
+  defp database do
+    :postgres_history
+    |> Application.fetch_env!(PostgresHistory.CreateHistory)
+    |> Keyword.fetch!(:database)
   end
 end
